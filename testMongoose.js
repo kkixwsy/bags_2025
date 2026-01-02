@@ -1,19 +1,24 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/testMongoose2024');
 
-const handbagSchema = new mongoose.Schema({ 
-  name: String 
-});
+(async () => {
+  try {
+    await mongoose.connect('mongodb://127.0.0.1:27017/bags_2025');
+    console.log('Подключено к bags_2025');
 
-handbagSchema.methods.show = function () {
-  console.log(`${this.name} — в магазине прямо сейчас!`);
-};
+    var Bags = require('./models/bag.js').Bags;
 
-const handbag = mongoose.model('Bags', handbagSchema);
+    var bags = new Bags({
+      title: "Биркин",
+      nick: "birkin"
+    });
 
-const birkin = new handbag({ name: 'Биркин' });
+    const saved = await bags.save();
+    console.log('Сумка сохранена! ID:', saved._id);
 
-birkin.save().then(() => {
-  console.log('Сумка успешно сохранена!');
-  birkin.show();  // ← вот здесь сработает наш метод
-});
+  } catch (err) {
+    console.error('Ошибка:', err.message);
+  } finally {
+    await mongoose.disconnect();
+    console.log('Подключение закрыто. Скрипт завершён');
+  }
+})();
