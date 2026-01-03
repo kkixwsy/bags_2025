@@ -33,7 +33,7 @@ app.use(session({
  proxy: true,
  resave: true,
  saveUninitialized: true,
- store: MongoStore.create({mongoUrl: 'mongodb://localhost/bags2025'})
+ store: MongoStore.create({mongoUrl: 'mongodb://localhost/bags_2025'})
 }))
 
 app.use(function(req,res,next){
@@ -41,7 +41,7 @@ app.use(function(req,res,next){
  next()
  })
 
-
+app.use(require("./middlewares/createMenu.js"))
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/bags', indexBags);
